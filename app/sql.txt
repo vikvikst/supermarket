@@ -1,0 +1,9 @@
+CREATE DATABASE supermarket_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+use upermarket_db;
+CREATE TABLE supplier (
+        id INTEGER NOT NULL AUTO_INCREMENT,
+        name VARCHAR(32) NOT NULL,
+        address VARCHAR(32) NOT NULL,
+        phone INTEGER NOT NULL,
+        account INTEGER NOT NULL,
+        PRIMARY KEY (id)
