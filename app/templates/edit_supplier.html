@@ -35,7 +35,7 @@
     <p>{{ form.submit() }}</p>
 </form>
 <button
-        onclick="location.href='/add_supplier'" type="button">Удалить поставщика
+        onclick="location.href='/delete_supplier/'+{{supplier_id}}" type="button">Удалить поставщика
 </button>
 <button
         onclick="location.href='{{ url_for('get_suppliers')}}'" type="button">К списку поставщиков

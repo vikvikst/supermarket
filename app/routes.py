@@ -84,3 +84,17 @@ def edit_supplier(id):
         return render_template(
             'edit_supplier.html', title='Изменение данных поставщика',
             form=form, supplier_id = supplier_id)
+
+@app.route('/delete_supplier/<int:id>')
+def delete_user(id):
+    supplier = Supplier.query.get(id)
+    if not supplier:
+        flash('Запрошенного поставщика не существует')
+        return redirect(url_for('index'))
+    try:
+        db.session.delete(supplier)
+        db.session.commit()
+        flash('Запись удалена')
+    except Exception as e:
+        flash('Не удалось удалить запись')
+    return redirect(url_for('get_suppliers'))
