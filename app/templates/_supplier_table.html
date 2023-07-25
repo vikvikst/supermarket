@@ -1,0 +1,22 @@
+<table id="maintable" class="tables" border="1" cellpadding="5" cellspacing="5">
+    <thead>
+    <tr>
+        <td>id</td>
+        <td>Название</td>
+        <td>Адрес</td>
+        <td>Телефон</td>
+        <td>Расчетный счет</td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for values in suppliers %}
+    <tr>
+        <td>{{values.id}}</td>
+        <td><a href="{{ url_for('add_supplier')}}" title="Редактировать" target="_blank">{{values.name}}</a></td>
+        <td>{{values.address}}</td>
+        <td>{{values.phone}}</td>
+        <td>{{values.account}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

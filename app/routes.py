@@ -14,12 +14,14 @@ def index():
                            title="index page",
                            msg=msg)
 
+
 @app.route('/get_suppliers')
 def get_suppliers():
     suppliers = Supplier.query.all()
     return render_template('get_suppliers.html', title='Список поставщиков',
                            suppliers=suppliers)
     return "all"
+
 
 @app.route('/add_supplier', methods=['GET', 'POST'])
 def add_supplier():
@@ -29,14 +31,16 @@ def add_supplier():
             supplier = Supplier()
             supplier.name = form.name.data
             supplier.address = form.address.data
-            supplier.phone = form.phone.data
+            supplier.phone = int(form.phone.data)
             supplier.account = random.randrange(10000000000000000000,
                                                 99999999999999999999)
+            # todo: validate account
             try:
                 db.session.add(supplier)
                 db.session.commit()
             except Exception as e:
                 flash('Не удалось добавить поставщика')
+                print(e)
             return redirect(url_for('get_suppliers'))
     else:
         return render_template(
