@@ -19,4 +19,5 @@ class AddSupplierForm(FlaskForm):
                                                      NumberRange(
         min=0,max=99999999999999999999, message='Значение не может быть '
                                         'отрицательным')])
-    submit = SubmitField('Добавить')
+    submit = SubmitField('Применить')
+

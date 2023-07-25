@@ -12,7 +12,7 @@
     {% for values in suppliers %}
     <tr>
         <td>{{values.id}}</td>
-        <td><a href="{{ url_for('add_supplier')}}" title="Редактировать" target="_blank">{{values.name}}</a></td>
+        <td><a href="{{ url_for('edit_supplier',id = values.id)}}" title="Редактировать" target="_blank">{{values.name}}</a></td>
         <td>{{values.address}}</td>
         <td>{{values.phone}}</td>
         <td>{{values.account}}</td>

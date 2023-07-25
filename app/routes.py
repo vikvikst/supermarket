@@ -8,6 +8,7 @@ from app.models import Supplier
 
 
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
     msg = ""
     return render_template("index.html",
@@ -46,3 +47,40 @@ def add_supplier():
         return render_template(
             'add_supplier.html', title='Добавление '
                                        'нового поставщика', form=form)
+
+@app.route('/edit_supplier/<int:id>', methods=['GET', 'POST'])
+def edit_supplier(id):
+    supplier = Supplier.query.get(id)
+    if not supplier:
+        flash('Запрошенного на редактирование поставщика не существует')
+        return redirect(url_for('get_suppliers'))
+    form = AddSupplierForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            supplier = Supplier()
+            supplier.name = form.name.data
+            supplier.address = form.address.data
+            supplier.phone = int(form.phone.data)
+            supplier.account = int(form.account.data)
+
+            # todo: validate account
+            try:
+                db.session.add(supplier)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось отредактировать данные поставщика')
+                return redirect(url_for('get_suppliers'))
+                print(e)
+            flash('Данные поставщика отредактирваны')
+            return redirect(url_for('edit_supplier',id = id))
+    # GET method
+    else:
+        supplier_id = supplier.id
+        form.name.data = supplier.name
+        form.address.data = supplier.address
+        form.phone.data = supplier.phone
+        form.account.data = supplier.account
+
+        return render_template(
+            'edit_supplier.html', title='Изменение данных поставщика',
+            form=form, supplier_id = supplier_id)
