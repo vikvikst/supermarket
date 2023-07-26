@@ -21,7 +21,6 @@ def get_suppliers():
     suppliers = Supplier.query.all()
     return render_template('get_suppliers.html', title='Список поставщиков',
                            suppliers=suppliers)
-    return "all"
 
 
 @app.route('/add_supplier', methods=['GET', 'POST'])
@@ -108,7 +107,6 @@ def add_class_product():
             class_product = ClassProduct()
             class_product.name = form.name.data
             class_product.description = form.description.data
-            print('zdec')
             try:
                 db.session.add(class_product)
                 db.session.commit()
@@ -119,3 +117,9 @@ def add_class_product():
     else:
         return render_template('add_class_product.html', title='Добавление '
                                        'класса продуктов',form=form)
+
+@app.route('/get_class_products')
+def get_class_products():
+    suppliers = ClassProduct.query.all()
+    return render_template('get_class_products.html', title='Список классов '
+                                                'товаров',suppliers=suppliers)

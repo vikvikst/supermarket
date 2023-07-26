@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if msg %}
+Сообщение: {{ msg }}
+{% endif %}
+
+<title>{{ title }}</title>
+{% if suppliers %}
+{% include '_supplier_table.html' %}
+{% else %}
+<H1> Выборка пуста</H1>
+{% endif %}
+<button
+        onclick="location.href='/add_supplier'" type="button">Добавить поставщика
+</button>
+
+
+
+{% endblock %}
