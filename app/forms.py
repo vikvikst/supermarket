@@ -21,3 +21,16 @@ class AddSupplierForm(FlaskForm):
                                         'отрицательным')])
     submit = SubmitField('Применить')
 
+class AddClassProductForm(FlaskForm):
+    name = StringField('Имя класса товаров',
+                       validators=[DataRequired(), validate_isalpha])
+    description = StringField('Описание', validators=[DataRequired(), Length(
+        max=32)])
+    submit = SubmitField('Добавить')
+
+class AddNameProductForm(FlaskForm):
+    name = StringField('Наименование товаро',
+                       validators=[DataRequired(), validate_isalpha])
+    description = StringField('Описание', validators=[DataRequired(), Length(
+        max=32)])
+    submit = SubmitField('Добавить')

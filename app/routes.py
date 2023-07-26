@@ -3,8 +3,8 @@ import random
 from flask import render_template, request, redirect, url_for, flash
 
 from app import app, db
-from app.forms import AddSupplierForm
-from app.models import Supplier
+from app.forms import AddSupplierForm, AddClassProductForm
+from app.models import Supplier, ClassProduct
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -98,3 +98,24 @@ def delete_user(id):
     except Exception as e:
         flash('Не удалось удалить запись')
     return redirect(url_for('get_suppliers'))
+
+
+@app.route('/add_class_product', methods=['GET', 'POST'])
+def add_class_product():
+    form = AddClassProductForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            class_product = ClassProduct()
+            class_product.name = form.name.data
+            class_product.description = form.description.data
+            print('zdec')
+            try:
+                db.session.add(class_product)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось добавить запись')
+                return redirect(url_for('index'))
+        return redirect(url_for('index'))
+    else:
+        return render_template('add_class_product.html', title='Добавление '
+                                       'класса продуктов',form=form)
