@@ -157,3 +157,18 @@ def edit_class_product(id):
         return render_template(
             'edit_class_product.html', title='Изменение данных класса продукта',
             form=form, class_product_id = class_product_id)
+
+@app.route('/delete_class_product/<int:id>')
+def delete_class_product(id):
+    class_product = ClassProduct.query.get(id)
+    if not class_product:
+        flash('Запрошенной записи не существует')
+        return redirect(url_for('get_class_products'))
+    try:
+        db.session.delete(class_product)
+        db.session.commit()
+    except Exception as e:
+        flash('Не удалось удалить запись')
+        return redirect(url_for('get_class_products'))
+    flash('запись удалена')
+    return redirect(url_for('get_class_products'))
