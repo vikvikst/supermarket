@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField
+from wtforms import StringField, IntegerField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, NumberRange, \
     Length
 
@@ -24,13 +24,13 @@ class AddSupplierForm(FlaskForm):
 class AddClassProductForm(FlaskForm):
     name = StringField('Имя класса товаров',
                        validators=[DataRequired(), validate_isalpha])
-    description = StringField('Описание', validators=[DataRequired(), Length(
+    description = TextAreaField('Описание', validators=[DataRequired(), Length(
         max=32)])
     submit = SubmitField('Добавить')
 
 class AddNameProductForm(FlaskForm):
     name = StringField('Наименование товаро',
                        validators=[DataRequired(), validate_isalpha])
-    description = StringField('Описание', validators=[DataRequired(), Length(
+    description = TextAreaField('Описание', validators=[DataRequired(), Length(
         max=32)])
     submit = SubmitField('Добавить')

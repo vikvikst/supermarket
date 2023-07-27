@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(size=32) }}<br>
+        {% for error in form.name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.description.label }}<br>
+        {{ form.description(size=32) }}<br>
+        {% for error in form.description.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+<button
+        onclick="location.href='/delete_supplier/'+{{class_product_id}}" type="button">Удалить класс продукта
+</button>
+<button
+        onclick="location.href='{{ url_for('get_class_products')}}'" type="button">К списку классов продуктов
+</button>
+<button
+        onclick="location.href='{{ url_for('index')}}'" type="button">На главную
+</button>
+{% endblock %}

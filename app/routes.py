@@ -120,6 +120,40 @@ def add_class_product():
 
 @app.route('/get_class_products')
 def get_class_products():
-    suppliers = ClassProduct.query.all()
+    class_products = ClassProduct.query.all()
     return render_template('get_class_products.html', title='Список классов '
-                                                'товаров',suppliers=suppliers)
+                                    'товаров',class_products=class_products)
+
+
+@app.route('/edit_class_product/<int:id>', methods=['GET', 'POST'])
+def edit_class_product(id):
+    class_product = ClassProduct.query.get(id)
+    if not class_product:
+        flash('Запрошенной записи не существует')
+        return redirect(url_for('get_class_products'))
+    form = AddClassProductForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            class_product = ClassProduct()
+            class_product.name = form.name.data
+            class_product.description = form.description.data
+
+            # todo: validate account
+            try:
+                db.session.add(class_product)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось отредактировать запись')
+                return redirect(url_for('get_class_products'))
+                print(e)
+            flash('Запись отредактирована')
+            return redirect(url_for('edit_class_product',id = id))
+    # GET method
+    else:
+        class_product_id = class_product.id
+        form.name.data = class_product.name
+        form.description.data = class_product.description
+
+        return render_template(
+            'edit_class_product.html', title='Изменение данных класса продукта',
+            form=form, class_product_id = class_product_id)

@@ -51,6 +51,11 @@ class ClassProduct(db.Model):
         lazy='dynamic')
     # events = db.relationship('Event', backref='users', lazy=True)
 
+    def __repr__(self):
+        return "<{}:{}:{}>".format(self.id,
+                                         self.name,
+                                         self.description)
+
 
 class NameProduct(db.Model):
     __tablename__ = 'name_product'
@@ -65,3 +70,7 @@ class NameProduct(db.Model):
         backref=db.backref('classproduct_nameproduct', lazy='dynamic'),
         lazy='dynamic')
 
+    def __repr__(self):
+        return "<{}:{}:{}>".format(self.id,
+                                   self.name,
+                                   self.description)
