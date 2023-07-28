@@ -201,4 +201,10 @@ def add_name_product():
         return redirect(url_for('get_class_products'))
     else:
         return render_template('add_class_product.html', title='Добавление '
-                                                               'класса продуктов',form=form)
+                                               'класса продуктов',form=form)
+
+@app.route('/get_names_products')
+def get_names_products():
+    name_products = NameProduct.query.all()
+    return render_template('get_class_products.html', title='Список '
+                        'наименований товаров',class_products=name_products)
