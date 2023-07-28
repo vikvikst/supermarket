@@ -1,7 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, TextAreaField
+from wtforms import StringField, IntegerField, SubmitField, TextAreaField, \
+    SelectField
 from wtforms.validators import DataRequired, ValidationError, NumberRange, \
     Length
+
+from app.models import ClassProduct
 
 
 def validate_isalpha(form, field):
@@ -29,8 +32,12 @@ class AddClassProductForm(FlaskForm):
     submit = SubmitField('Добавить')
 
 class AddNameProductForm(FlaskForm):
-    name = StringField('Наименование товаро',
+    name = StringField('Наименование товара',
                        validators=[DataRequired(), validate_isalpha])
     description = TextAreaField('Описание', validators=[DataRequired(), Length(
         max=32)])
+    class_product = SelectField('Класс продукт', choices=lambda: [(r.id, r.name)
+                                                               for
+                              r in ClassProduct.query.all()], coerce=int)
+
     submit = SubmitField('Добавить')

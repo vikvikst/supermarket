@@ -3,8 +3,8 @@ import random
 from flask import render_template, request, redirect, url_for, flash
 
 from app import app, db
-from app.forms import AddSupplierForm, AddClassProductForm
-from app.models import Supplier, ClassProduct
+from app.forms import AddSupplierForm, AddClassProductForm, AddNameProductForm
+from app.models import Supplier, ClassProduct, NameProduct
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -172,3 +172,33 @@ def delete_class_product(id):
         return redirect(url_for('get_class_products'))
     flash('запись удалена')
     return redirect(url_for('get_class_products'))
+
+@app.route('/add_name_product', methods=['GET', 'POST'])
+def add_name_product():
+    form = AddNameProductForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            name_product = NameProduct()
+            name_product.name = form.name.data
+            name_product.description = form.description.data
+            # name_product.classp = int(form.class_product.data)
+            # classp_id = form.class_product.data
+            #
+            # classp = ClassProduct.query.get(classp_id)
+            # if NameProduct.is_attach_namep_to_classp(classp):
+            #     # return ('ttt')
+            #     name_product.attach_namep_to_classp(classp)
+
+            # return ('e')
+            try:
+                # name_product.classp.append(classp)
+                db.session.add(name_product)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось добавить запись')
+                return redirect(url_for('get_class_products'))
+
+        return redirect(url_for('get_class_products'))
+    else:
+        return render_template('add_class_product.html', title='Добавление '
+                                                               'класса продуктов',form=form)

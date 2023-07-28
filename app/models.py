@@ -47,7 +47,7 @@ class ClassProduct(db.Model):
     namep = db.relationship(
         'NameProduct', secondary=classproduct_nameproduct,
         primaryjoin=(classproduct_nameproduct.c.id_namep == id),
-        backref=db.backref('classproduct_nameproduct', lazy='dynamic'),
+        backref=db.backref('classes', lazy='dynamic'),
         lazy='dynamic')
     # events = db.relationship('Event', backref='users', lazy=True)
 
@@ -67,8 +67,20 @@ class NameProduct(db.Model):
     classp = db.relationship(
         'ClassProduct', secondary=classproduct_nameproduct,
         primaryjoin=(classproduct_nameproduct.c.id_classp == id),
-        backref=db.backref('classproduct_nameproduct', lazy='dynamic'),
+        backref=db.backref('names', lazy='dynamic'),
         lazy='dynamic')
+
+    def is_attach_namep_to_classp(self, namep):
+        return self.classp.filter(
+            classproduct_nameproduct.c.id_classp == namep.id).count() > 0
+
+    def attach_namep_to_classp(self, namep):
+        if not self.is_attach_namep_to_classp(namep):
+            self.classp.append(namep)
+
+    def detach_namep_to_classp(self, namep):
+        if self.is_attach_namep_to_classp(namep):
+            self.followed.remove(namep)
 
     def __repr__(self):
         return "<{}:{}:{}>".format(self.id,
