@@ -46,10 +46,8 @@ class ClassProduct(db.Model):
 
     namep = db.relationship(
         'NameProduct', secondary=classproduct_nameproduct,
-        primaryjoin=(classproduct_nameproduct.c.id_namep == id),
-        backref=db.backref('classes', lazy='dynamic'),
-        lazy='dynamic')
-    # events = db.relationship('Event', backref='users', lazy=True)
+        backref=db.backref('classes', lazy='dynamic'),single_parent=True,
+        cascade="all, delete, delete-orphan",lazy='dynamic')
 
     def __repr__(self):
         return "<{}:{}:{}>".format(self.id,
@@ -65,11 +63,9 @@ class NameProduct(db.Model):
     # id_diver = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='cascade'))
 
     classp = db.relationship(
-        'ClassProduct', secondary=classproduct_nameproduct,
-        primaryjoin=(classproduct_nameproduct.c.id_classp == id),
-        backref=db.backref('names', lazy='dynamic'),
-        lazy='dynamic')
-
+            'ClassProduct', secondary=classproduct_nameproduct,
+            backref=db.backref('names', lazy='dynamic'),single_parent=True,
+            cascade="all, delete, delete-orphan",lazy='dynamic')
     def is_attach_namep_to_classp(self, namep):
         return self.classp.filter(
             classproduct_nameproduct.c.id_classp == namep.id).count() > 0
@@ -77,6 +73,7 @@ class NameProduct(db.Model):
     def attach_namep_to_classp(self, namep):
         if not self.is_attach_namep_to_classp(namep):
             self.classp.append(namep)
+            return namep
 
     def detach_namep_to_classp(self, namep):
         if self.is_attach_namep_to_classp(namep):

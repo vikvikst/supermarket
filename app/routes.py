@@ -182,16 +182,12 @@ def add_name_product():
             name_product.name = form.name.data
             name_product.description = form.description.data
             # name_product.classp = int(form.class_product.data)
-            # classp_id = form.class_product.data
+            classp_id = int(form.class_product.data)
+            print("if:{}".format(type(classp_id)))
             #
-            # classp = ClassProduct.query.get(classp_id)
-            # if NameProduct.is_attach_namep_to_classp(classp):
-            #     # return ('ttt')
-            #     name_product.attach_namep_to_classp(classp)
-
-            # return ('e')
+            classp = ClassProduct.query.get(classp_id)
             try:
-                # name_product.classp.append(classp)
+                name_product.classp.append(classp)
                 db.session.add(name_product)
                 db.session.commit()
             except Exception as e:
