@@ -112,8 +112,8 @@ def add_class_product():
                 db.session.commit()
             except Exception as e:
                 flash('Не удалось добавить запись')
-                return redirect(url_for('index'))
-        return redirect(url_for('index'))
+                return redirect(url_for('get_class_products'))
+        return redirect(url_for('get_class_products'))
     else:
         return render_template('add_class_product.html', title='Добавление '
                                        'класса продуктов',form=form)
