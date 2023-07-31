@@ -18,7 +18,7 @@
     <tbody>
     {% for values in measures %}
     <tr>
-        <td><a href="{{ url_for('edit_class_product',id = values.id)}}" title="Редактировать" target="_blank">{{values.name}}</a></td>
+        <td><a href="{{ url_for('edit_measure',id = values.id)}}" title="Редактировать" target="_blank">{{values.name}}</a></td>
         <td>{{values.description}}</td>
     </tr>
     {% endfor %}
@@ -30,7 +30,7 @@
 <H1> Выборка пуста</H1>
 {% endif %}
 <button
-        onclick="location.href='/add_class_product'" type="button">Добавить
+        onclick="location.href='/add_measure'" type="button">Добавить
 </button>
 
 

@@ -281,3 +281,35 @@ def get_measures():
     measures = Measure.query.all()
     return render_template('get_measures.html', title='Список '
                             'единиц измерения',measures=measures)
+
+@app.route('/edit_measure/<int:id>', methods=['GET', 'POST'])
+def edit_measure(id):
+    measure = Measure.query.get(id)
+    if not measure:
+        flash('Запрошенной записи не существует')
+        return redirect(url_for('get_measures'))
+    form = AddMeasureForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            measure.name = form.name.data
+            measure.description = form.description.data
+
+            # todo: validate account
+            try:
+                db.session.add(measure)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось отредактировать запись')
+                return redirect(url_for('get_measures'))
+                print(e)
+            flash('Запись отредактирована')
+            return redirect(url_for('edit_measure',id = id))
+    # GET method
+    else:
+        measure_id = measure.id
+        form.name.data = measure.name
+        form.description.data = measure.description
+
+        return render_template(
+            'edit_measure.html', title='Изменение единицы измерения',
+            form=form, measure_id = measure_id)
