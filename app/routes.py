@@ -313,3 +313,17 @@ def edit_measure(id):
         return render_template(
             'edit_measure.html', title='Изменение единицы измерения',
             form=form, measure_id = measure_id)
+
+@app.route('/delete_measure/<int:id>')
+def delete_measure(id):
+    measure = Measure.query.get(id)
+    if not measure:
+        flash('Запрошенноой записи не существует')
+        return redirect(url_for('get_measures'))
+    try:
+        db.session.delete(measure)
+        db.session.commit()
+        flash('Запись удалена')
+    except Exception as e:
+        flash('Не удалось удалить запись')
+    return redirect(url_for('get_measures'))
