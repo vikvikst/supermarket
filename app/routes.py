@@ -269,10 +269,15 @@ def add_measure():
                 db.session.commit()
             except Exception as e:
                 flash('Не удалось добавить запись')
-                # return redirect(url_for('get_measures'))
-                return redirect(url_for('add_measure'))
+                return redirect(url_for('get_measures'))
 
-        return redirect(url_for('add_measure'))
+        return redirect(url_for('get_measures'))
     else:
         return render_template('add_measure.html', title='Добавление '
                                           'единиц измерения',form=form)
+
+@app.route('/get_measures')
+def get_measures():
+    measures = Measure.query.all()
+    return render_template('get_measures.html', title='Список '
+                            'единиц измерения',measures=measures)
