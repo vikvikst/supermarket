@@ -212,12 +212,13 @@ def edit_name_product(id):
     if not name_product:
         flash('Запрошенной записи не существует')
         return redirect(url_for('get_names_products'))
-    form = AddNameProductForm()
+    form = AddNameProductForm(measure = name_product.id_measure,
+                              class_product = name_product.classp)
     if request.method == "POST":
         if form.validate_on_submit():
-            name_product = ClassProduct()
             name_product.name = form.name.data
             name_product.description = form.description.data
+            name_product.id_measure = int(form.measure.data)
 
             # todo: validate account
             try:
@@ -253,7 +254,6 @@ def delete_name_product(id):
         return redirect(url_for('get_names_products'))
     flash('запись удалена')
     return redirect(url_for('get_names_products'))
-
 
 @app.route('/add_measure', methods=['GET', 'POST'])
 def add_measure():

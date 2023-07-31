@@ -38,6 +38,10 @@ class AddNameProductForm(FlaskForm):
         max=32)])
     class_product = SelectField('Класс продукт', choices=lambda: [(r.id, r.name)
                        for r in ClassProduct.query.all()], coerce=int)
+    measure = SelectField('Единица измерения',
+                               choices=lambda: [(r.id, r.name)
+                                                for r in Measure.query.all()],
+                          coerce=int)
     submit = SubmitField('Добавить')
 
 class AddMeasureForm(FlaskForm):

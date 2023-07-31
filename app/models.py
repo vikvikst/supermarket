@@ -61,6 +61,7 @@ class NameProduct(db.Model):
     products = db.relationship('Product', backref='namep', lazy=True)
     name = db.Column(db.String(32), nullable=False)
     description = db.Column(db.String(32), nullable=False)
+    id_measure = db.Column(db.Integer, db.ForeignKey('measure.id'))
     # id_diver = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='cascade'))
 
     classp = db.relationship(
@@ -92,7 +93,7 @@ class Measure(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(32), nullable=False)
     description = db.Column(db.String(32), nullable=False)
-    products = db.relationship('Product', backref='measures', lazy=True)
+    products = db.relationship('NameProduct', backref='measures', lazy=True)
     def __repr__(self):
         return "<{}:{}:{}>".format(self.id,
                                    self.name,
