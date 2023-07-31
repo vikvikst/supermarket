@@ -37,7 +37,12 @@ class AddNameProductForm(FlaskForm):
     description = TextAreaField('Описание', validators=[DataRequired(), Length(
         max=32)])
     class_product = SelectField('Класс продукт', choices=lambda: [(r.id, r.name)
-                                                               for
-                              r in ClassProduct.query.all()], coerce=int)
+                       for r in ClassProduct.query.all()], coerce=int)
+    submit = SubmitField('Добавить')
 
+class AddMeasureForm(FlaskForm):
+    name = StringField('Единица измерения',
+                       validators=[DataRequired(), validate_isalpha])
+    description = TextAreaField('Описание', validators=[DataRequired(), Length(
+                        max=32)])
     submit = SubmitField('Добавить')

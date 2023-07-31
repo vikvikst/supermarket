@@ -3,8 +3,9 @@ import random
 from flask import render_template, request, redirect, url_for, flash
 
 from app import app, db
-from app.forms import AddSupplierForm, AddClassProductForm, AddNameProductForm
-from app.models import Supplier, ClassProduct, NameProduct
+from app.forms import AddSupplierForm, AddClassProductForm, AddNameProductForm, \
+    AddMeasureForm
+from app.models import Supplier, ClassProduct, NameProduct, Measure
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -210,7 +211,7 @@ def edit_name_product(id):
     name_product = NameProduct.query.get(id)
     if not name_product:
         flash('Запрошенной записи не существует')
-        return redirect(url_for('get_name_products'))
+        return redirect(url_for('get_names_products'))
     form = AddNameProductForm()
     if request.method == "POST":
         if form.validate_on_submit():
@@ -252,3 +253,26 @@ def delete_name_product(id):
         return redirect(url_for('get_names_products'))
     flash('запись удалена')
     return redirect(url_for('get_names_products'))
+
+
+@app.route('/add_measure', methods=['GET', 'POST'])
+def add_measure():
+    form = AddMeasureForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            measure = Measure()
+            measure.name = form.name.data
+            measure.description = form.description.data
+            #
+            try:
+                db.session.add(measure)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось добавить запись')
+                # return redirect(url_for('get_measures'))
+                return redirect(url_for('add_measure'))
+
+        return redirect(url_for('add_measure'))
+    else:
+        return render_template('add_measure.html', title='Добавление '
+                                          'единиц измерения',form=form)
