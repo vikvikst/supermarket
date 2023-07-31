@@ -58,6 +58,7 @@ class ClassProduct(db.Model):
 class NameProduct(db.Model):
     __tablename__ = 'name_product'
     id = db.Column(db.Integer(), primary_key=True)
+    products = db.relationship('Product', backref='namep', lazy=True)
     name = db.Column(db.String(32), nullable=False)
     description = db.Column(db.String(32), nullable=False)
     # id_diver = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='cascade'))
@@ -91,7 +92,29 @@ class Measure(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(32), nullable=False)
     description = db.Column(db.String(32), nullable=False)
+    products = db.relationship('Product', backref='measures', lazy=True)
     def __repr__(self):
         return "<{}:{}:{}>".format(self.id,
                                    self.name,
                                     self.description)
+
+class Product(db.Model):
+    __tablename__ = 'product'
+    id = db.Column(db.Integer(), primary_key=True)
+    id_namep = db.Column(db.Integer, db.ForeignKey('name_product.id'))
+    id_measure = db.Column(db.Integer, nullable=False)
+    price_buy = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
+    price_sell = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
+    number = db.Column(db.Integer, nullable=False)
+
+    name = db.Column(db.String(32), nullable=False)
+    address = db.Column(db.String(32), nullable=False)
+    phone = db.Column(db.Integer(), nullable=False)
+    account = db.Column(db.String(20), nullable=False)
+
+    def __repr__(self):
+        return "<{}:{}:{}:{}:{}>".format(self.id,
+                                         self.name,
+                                         self.address,
+                                         self.phone,
+                                         self.account)
