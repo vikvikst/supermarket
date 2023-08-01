@@ -46,8 +46,9 @@ class ClassProduct(db.Model):
 
     namep = db.relationship(
         'NameProduct', secondary=classproduct_nameproduct,
-        backref=db.backref('classes', lazy='dynamic'),single_parent=True,
-        cascade="all, delete, delete-orphan",lazy='dynamic')
+        backref=db.backref('classes', lazy='dynamic'), lazy='dynamic')
+        # backref=db.backref('classes', lazy='dynamic'),single_parent=True,
+        # cascade="all, delete, delete-orphan",lazy='dynamic')
 
     def __repr__(self):
         return "<{}:{}:{}>".format(self.id,
@@ -66,8 +67,19 @@ class NameProduct(db.Model):
 
     classp = db.relationship(
             'ClassProduct', secondary=classproduct_nameproduct,
-            backref=db.backref('names', lazy='dynamic'),single_parent=True,
-            cascade="all, delete, delete-orphan",lazy='dynamic')
+        backref=db.backref('names', lazy='dynamic'), lazy='dynamic')
+            # backref=db.backref('names', lazy='dynamic'),single_parent=True,
+            # cascade="all, delete, delete-orphan",lazy='dynamic')
+    def get_id_classp_for_namep(self):
+        # a =  ClassProduct.query.join(
+        #     classproduct_nameproduct, (classproduct_nameproduct.c.id_namep ==
+        #                                self.id)).first()
+        a = self.classp
+        # for i in a:
+        print(a[0].id)
+        # print(a)
+        return 2
+
     def is_attach_namep_to_classp(self, namep):
         return self.classp.filter(
             classproduct_nameproduct.c.id_classp == namep.id).count() > 0

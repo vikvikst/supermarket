@@ -183,6 +183,7 @@ def add_name_product():
             name_product.name = form.name.data
             name_product.description = form.description.data
             # name_product.classp = int(form.class_product.data)
+            name_product.id_measure = form.measure.data
             classp_id = int(form.class_product.data)
             print("if:{}".format(type(classp_id)))
             #
@@ -212,13 +213,27 @@ def edit_name_product(id):
     if not name_product:
         flash('Запрошенной записи не существует')
         return redirect(url_for('get_names_products'))
+    class_product = name_product.classp[0]
     form = AddNameProductForm(measure = name_product.id_measure,
-                              class_product = name_product.classp)
+                              class_product = class_product.id)
     if request.method == "POST":
         if form.validate_on_submit():
             name_product.name = form.name.data
             name_product.description = form.description.data
             name_product.id_measure = int(form.measure.data)
+            selected_id_class_product = int(request.form.get('class_product'))
+            if selected_id_class_product != class_product.id:
+                try:
+                    # name_product.classp.remove
+                    class_product.namep.remove(name_product)
+                    db.session.commit()
+                except Exception as e:
+                    flash('Не удалось удалить запись')
+                    print(e)
+                    return redirect(url_for('get_name_products'))
+                class_product = ClassProduct.query.get(selected_id_class_product)
+                class_product.namep.append(name_product)
+            # return ("ffff")
 
             # todo: validate account
             try:
