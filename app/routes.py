@@ -224,8 +224,8 @@ def edit_name_product(id):
             selected_id_class_product = int(request.form.get('class_product'))
             if selected_id_class_product != class_product.id:
                 try:
-                    # name_product.classp.remove
                     class_product.namep.remove(name_product)
+                    # name_product.classp.remove(class_product)
                     db.session.commit()
                 except Exception as e:
                     flash('Не удалось удалить запись')
@@ -262,6 +262,10 @@ def delete_name_product(id):
         flash('Запрошенной записи не существует')
         return redirect(url_for('get_names_products'))
     try:
+        class_product = name_product.classp[0]
+        # class_product.namep.remove(name_product)
+        name_product.classp.remove(class_product)
+        db.session.commit()
         db.session.delete(name_product)
         db.session.commit()
     except Exception as e:
