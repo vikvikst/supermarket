@@ -115,15 +115,11 @@ class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer(), primary_key=True)
     id_namep = db.Column(db.Integer, db.ForeignKey('name_product.id'))
-    id_measure = db.Column(db.Integer, nullable=False)
     price_buy = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     price_sell = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     number = db.Column(db.Integer, nullable=False)
 
-    name = db.Column(db.String(32), nullable=False)
-    address = db.Column(db.String(32), nullable=False)
-    phone = db.Column(db.Integer(), nullable=False)
-    account = db.Column(db.String(20), nullable=False)
+
 
     def __repr__(self):
         return "<{}:{}:{}:{}:{}>".format(self.id,

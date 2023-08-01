@@ -52,16 +52,13 @@ class AddMeasureForm(FlaskForm):
     submit = SubmitField('Добавить')
 
 class AddProductForm(FlaskForm):
-    name = StringField('Наименование товара',
-                       validators=[DataRequired(), validate_isalpha])
-    description = TextAreaField('Описание', validators=[DataRequired(), Length(
-        max=32)])
     name_product = SelectField('Наименование товара',
                                 choices=lambda: [(r.id, r.name)
                                 for r in NameProduct.query.all()], coerce=int)
     price_buy = DecimalField('Цена покупки',places=2)
     price_sell = DecimalField('Цена продажи',places=2)
     # price_sell = FloatField('Цена продажи', validators=[DataRequired()])
-    phone = IntegerField('Количество', validators=[DataRequired(), NumberRange(
+    number = IntegerField('Количество', validators=[DataRequired(), NumberRange(
         min=0, message='Значение не может быть отрицательным')])
+
     submit = SubmitField('Добавить')

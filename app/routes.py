@@ -346,3 +346,24 @@ def delete_measure(id):
     except Exception as e:
         flash('Не удалось удалить запись')
     return redirect(url_for('get_measures'))
+
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+    form = AddMeasureForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            product = Measure()
+            product.name = form.name.data
+            product.description = form.description.data
+            #
+            try:
+                db.session.add(product)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось добавить запись')
+                return redirect(url_for('get_products'))
+
+        return redirect(url_for('get_products'))
+    else:
+        return render_template('add_product.html', title='Добавление '
+                                                         'единиц измерения',form=form)

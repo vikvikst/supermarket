@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.name_product.label }}<br>
+        {{ form.name_product(size=32) }}<br>
+        {% for error in form.name_product.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.price_buy.label }}<br>
+        {{ form.price_buy(size=32) }}<br>
+        {% for error in form.price_buy.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.price_sell.label }}<br>
+        {{ form.price_sell }}<br>
+        {% for error in form.price_sell.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.number.label }}<br>
+        {{ form.number }}<br>
+        {% for error in form.number.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
