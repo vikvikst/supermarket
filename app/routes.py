@@ -3,9 +3,9 @@ import random
 from flask import render_template, request, redirect, url_for, flash
 
 from app import app, db
-from app.forms import AddSupplierForm, AddClassProductForm, AddNameProductForm, \
-    AddMeasureForm
-from app.models import Supplier, ClassProduct, NameProduct, Measure
+from app.forms import AddSupplierForm, AddClassProductForm, \
+    AddMeasureForm, AddProductForm
+from app.models import Supplier, ClassProduct,  Measure, Product
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -174,105 +174,105 @@ def delete_class_product(id):
     flash('запись удалена')
     return redirect(url_for('get_class_products'))
 
-@app.route('/add_name_product', methods=['GET', 'POST'])
-def add_name_product():
-    form = AddNameProductForm()
-    if request.method == "POST":
-        if form.validate_on_submit():
-            name_product = NameProduct()
-            name_product.name = form.name.data
-            name_product.description = form.description.data
-            # name_product.classp = int(form.class_product.data)
-            name_product.id_measure = form.measure.data
-            classp_id = int(form.class_product.data)
-            print("if:{}".format(type(classp_id)))
-            #
-            classp = ClassProduct.query.get(classp_id)
-            try:
-                name_product.classp.append(classp)
-                db.session.add(name_product)
-                db.session.commit()
-            except Exception as e:
-                flash('Не удалось добавить запись')
-                return redirect(url_for('get_names_products'))
+# @app.route('/add_name_product', methods=['GET', 'POST'])
+# def add_name_product():
+#     form = AddNameProductForm()
+#     if request.method == "POST":
+#         if form.validate_on_submit():
+#             name_product = NameProduct()
+#             name_product.name = form.name.data
+#             name_product.description = form.description.data
+#             # name_product.classp = int(form.class_product.data)
+#             name_product.id_measure = form.measure.data
+#             classp_id = int(form.class_product.data)
+#             print("if:{}".format(type(classp_id)))
+#             #
+#             classp = ClassProduct.query.get(classp_id)
+#             try:
+#                 name_product.classp.append(classp)
+#                 db.session.add(name_product)
+#                 db.session.commit()
+#             except Exception as e:
+#                 flash('Не удалось добавить запись')
+#                 return redirect(url_for('get_names_products'))
+#
+#         return redirect(url_for('get_names_products'))
+#     else:
+#         return render_template('add_name_product.html', title='Добавление '
+#                                                'класса продуктов',form=form)
+#
+# @app.route('/get_names_products')
+# def get_names_products():
+#     names_products = NameProduct.query.all()
+#     return render_template('get_names_products.html', title='Список '
+#                         'наименований товаров',names_products=names_products)
+#
+# @app.route('/edit_name_product/<int:id>', methods=['GET', 'POST'])
+# def edit_name_product(id):
+#     name_product = NameProduct.query.get(id)
+#     if not name_product:
+#         flash('Запрошенной записи не существует')
+#         return redirect(url_for('get_names_products'))
+#     class_product = name_product.classp[0]
+#     form = AddNameProductForm(measure = name_product.id_measure,
+#                               class_product = class_product.id)
+#     if request.method == "POST":
+#         if form.validate_on_submit():
+#             name_product.name = form.name.data
+#             name_product.description = form.description.data
+#             name_product.id_measure = int(form.measure.data)
+#             selected_id_class_product = int(request.form.get('class_product'))
+#             if selected_id_class_product != class_product.id:
+#                 try:
+#                     class_product.namep.remove(name_product)
+#                     # name_product.classp.remove(class_product)
+#                     db.session.commit()
+#                 except Exception as e:
+#                     flash('Не удалось удалить запись')
+#                     print(e)
+#                     return redirect(url_for('get_name_products'))
+#                 class_product = ClassProduct.query.get(selected_id_class_product)
+#                 class_product.namep.append(name_product)
+#             # return ("ffff")
+#
+#             # todo: validate account
+#             try:
+#                 db.session.add(name_product)
+#                 db.session.commit()
+#             except Exception as e:
+#                 flash('Не удалось отредактировать запись')
+#                 return redirect(url_for('get_name_products'))
+#                 print(e)
+#             flash('Запись отредактирована')
+#             return redirect(url_for('edit_name_product',id = id))
+#     # GET method
+#     else:
+#         name_product_id = name_product.id
+#         form.name.data = name_product.name
+#         form.description.data = name_product.description
+#
+#         return render_template(
+#             'edit_name_product.html', title='Изменение данных класса продукта',
+#             form=form, name_product_id = name_product_id)
 
-        return redirect(url_for('get_names_products'))
-    else:
-        return render_template('add_name_product.html', title='Добавление '
-                                               'класса продуктов',form=form)
-
-@app.route('/get_names_products')
-def get_names_products():
-    names_products = NameProduct.query.all()
-    return render_template('get_names_products.html', title='Список '
-                        'наименований товаров',names_products=names_products)
-
-@app.route('/edit_name_product/<int:id>', methods=['GET', 'POST'])
-def edit_name_product(id):
-    name_product = NameProduct.query.get(id)
-    if not name_product:
-        flash('Запрошенной записи не существует')
-        return redirect(url_for('get_names_products'))
-    class_product = name_product.classp[0]
-    form = AddNameProductForm(measure = name_product.id_measure,
-                              class_product = class_product.id)
-    if request.method == "POST":
-        if form.validate_on_submit():
-            name_product.name = form.name.data
-            name_product.description = form.description.data
-            name_product.id_measure = int(form.measure.data)
-            selected_id_class_product = int(request.form.get('class_product'))
-            if selected_id_class_product != class_product.id:
-                try:
-                    class_product.namep.remove(name_product)
-                    # name_product.classp.remove(class_product)
-                    db.session.commit()
-                except Exception as e:
-                    flash('Не удалось удалить запись')
-                    print(e)
-                    return redirect(url_for('get_name_products'))
-                class_product = ClassProduct.query.get(selected_id_class_product)
-                class_product.namep.append(name_product)
-            # return ("ffff")
-
-            # todo: validate account
-            try:
-                db.session.add(name_product)
-                db.session.commit()
-            except Exception as e:
-                flash('Не удалось отредактировать запись')
-                return redirect(url_for('get_name_products'))
-                print(e)
-            flash('Запись отредактирована')
-            return redirect(url_for('edit_name_product',id = id))
-    # GET method
-    else:
-        name_product_id = name_product.id
-        form.name.data = name_product.name
-        form.description.data = name_product.description
-
-        return render_template(
-            'edit_name_product.html', title='Изменение данных класса продукта',
-            form=form, name_product_id = name_product_id)
-
-@app.route('/delete_name_product/<int:id>')
-def delete_name_product(id):
-    name_product = NameProduct.query.get(id)
-    if not name_product:
-        flash('Запрошенной записи не существует')
-        return redirect(url_for('get_names_products'))
-    try:
-        class_product = name_product.classp[0]
-        # class_product.namep.remove(name_product)
-        name_product.classp.remove(class_product)
-        db.session.commit()
-        db.session.delete(name_product)
-        db.session.commit()
-    except Exception as e:
-        flash('Не удалось удалить запись')
-        return redirect(url_for('get_names_products'))
-    flash('запись удалена')
-    return redirect(url_for('get_names_products'))
+# @app.route('/delete_name_product/<int:id>')
+# def delete_name_product(id):
+#     name_product = NameProduct.query.get(id)
+#     if not name_product:
+#         flash('Запрошенной записи не существует')
+#         return redirect(url_for('get_names_products'))
+#     try:
+#         class_product = name_product.classp[0]
+#         # class_product.namep.remove(name_product)
+#         name_product.classp.remove(class_product)
+#         db.session.commit()
+#         db.session.delete(name_product)
+#         db.session.commit()
+#     except Exception as e:
+#         flash('Не удалось удалить запись')
+#         return redirect(url_for('get_names_products'))
+#     flash('запись удалена')
+#     return redirect(url_for('get_names_products'))
 
 @app.route('/add_measure', methods=['GET', 'POST'])
 def add_measure():
@@ -349,12 +349,17 @@ def delete_measure(id):
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
-    form = AddMeasureForm()
+    form = AddProductForm()
     if request.method == "POST":
         if form.validate_on_submit():
-            product = Measure()
+            product = Product()
+            product.id_classp = int(form.id_classp.data)
+            product.id_measure = int(form.id_measure.data)
             product.name = form.name.data
             product.description = form.description.data
+            product.price_sell = round(float(form.price_sell.data),2)
+            product.id_measure = int(form.id_measure.data)
+            product.number = int(form.number.data)
             #
             try:
                 db.session.add(product)
@@ -366,4 +371,67 @@ def add_product():
         return redirect(url_for('get_products'))
     else:
         return render_template('add_product.html', title='Добавление '
-                                                         'единиц измерения',form=form)
+                                                         'продукта',form=form)
+
+@app.route('/get_products')
+def get_products():
+    products = Product.query.all()
+    return render_template('get_products.html', title='Товары',
+                           products=products)
+
+@app.route('/edit_product/<int:id>', methods=['GET', 'POST'])
+def edit_product(id):
+    product = Product.query.get(id)
+    if not product:
+        flash('Запрошенной записи не существует')
+        return redirect(url_for('get_products'))
+    form = AddProductForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            product.id_classp = int(form.id_classp.data)
+            product.id_measure = int(form.id_measure.data)
+            product.name = form.name.data
+            product.description = form.description.data
+            product.price_buy = round(float(form.price_buy.data),2)
+            product.price_sell = round(float(form.price_sell.data),2)
+            product.id_measure = int(form.id_measure.data)
+            product.number = int(form.number.data)
+            #
+            # todo: validate account
+            try:
+                db.session.add(product)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось отредактировать запись')
+                return redirect(url_for('get_products'))
+                print(e)
+            flash('Запись отредактирована')
+            return redirect(url_for('edit_product',id = id))
+    # GET method
+    else:
+        product_id = product.id
+        form.id_classp.data = product.id_classp
+        form.name.data = product.name
+        form.price_buy.data = product.price_buy
+        form.price_sell.data = product.price_sell
+        form.description.data = product.description
+        form.number.data = product.number
+        form.id_measure.data = product.id_measure
+
+        return render_template(
+            'edit_product.html', title='Редактирование товара',
+            form=form, product_id = product_id)
+
+@app.route('/delete_product/<int:id>')
+def delete_product(id):
+    product = Product.query.get(id)
+    if not product:
+        flash('Запрошенноой записи не существует')
+        return redirect(url_for('get_products'))
+    try:
+        db.session.delete(product)
+        db.session.commit()
+        flash('Запись удалена')
+    except Exception as e:
+        flash('Не удалось удалить запись')
+    return redirect(url_for('get_products'))

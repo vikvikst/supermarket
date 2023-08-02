@@ -4,7 +4,7 @@ from wtforms import StringField, IntegerField, SubmitField, TextAreaField, \
 from wtforms.validators import DataRequired, ValidationError, NumberRange, \
     Length
 
-from app.models import ClassProduct, NameProduct, Measure
+from app.models import ClassProduct, Measure
 
 
 def validate_isalpha(form, field):
@@ -31,19 +31,19 @@ class AddClassProductForm(FlaskForm):
         max=32)])
     submit = SubmitField('Добавить')
 
-class AddNameProductForm(FlaskForm):
-    name = StringField('Наименование товара',
-                       validators=[DataRequired(), validate_isalpha])
-    description = TextAreaField('Описание', validators=[DataRequired(), Length(
-        max=32)])
-    class_product = SelectField('Класс продукт', choices=lambda: [(r.id, r.name)
-                       for r in ClassProduct.query.all()], coerce=int)
-    measure = SelectField('Единица измерения',
-                               choices=lambda: [(r.id, r.name)
-                                                for r in Measure.query.all()],
-                          coerce=int)
-    submit = SubmitField('Добавить')
-
+# class AddNameProductForm(FlaskForm):
+#     name = StringField('Наименование товара',
+#                        validators=[DataRequired(), validate_isalpha])
+#     description = TextAreaField('Описание', validators=[DataRequired(), Length(
+#         max=32)])
+#     class_product = SelectField('Класс продукт', choices=lambda: [(r.id, r.name)
+#                        for r in ClassProduct.query.all()], coerce=int)
+#     measure = SelectField('Единица измерения',
+#                                choices=lambda: [(r.id, r.name)
+#                                                 for r in Measure.query.all()],
+#                           coerce=int)
+#     submit = SubmitField('Добавить')
+#
 class AddMeasureForm(FlaskForm):
     name = StringField('Единица измерения',
                        validators=[DataRequired(), validate_isalpha])
@@ -52,13 +52,20 @@ class AddMeasureForm(FlaskForm):
     submit = SubmitField('Добавить')
 
 class AddProductForm(FlaskForm):
-    name_product = SelectField('Наименование товара',
-                                choices=lambda: [(r.id, r.name)
-                                for r in NameProduct.query.all()], coerce=int)
+    # id readonly my_field = fields.StringField('Label', render_kw={'readonly': True})
+    id_classp = SelectField('Класс продукт', choices=lambda: [(r.id, r.name)
+                              for r in ClassProduct.query.all()], coerce=int)
+    name = StringField('Наименование товара',
+                       validators=[DataRequired(), validate_isalpha])
     price_buy = DecimalField('Цена покупки',places=2)
     price_sell = DecimalField('Цена продажи',places=2)
-    # price_sell = FloatField('Цена продажи', validators=[DataRequired()])
+    description = TextAreaField('Описание', validators=[DataRequired(), Length(
+        max=32)])
     number = IntegerField('Количество', validators=[DataRequired(), NumberRange(
         min=0, message='Значение не может быть отрицательным')])
+    id_measure = SelectField('Единица измерения',
+                          choices=lambda: [(r.id, r.name)
+                                           for r in Measure.query.all()],
+                          coerce=int)
 
-    submit = SubmitField('Добавить')
+    submit = SubmitField('Применить')

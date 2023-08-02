@@ -55,4 +55,14 @@
     </p>
     <p>{{ form.submit() }}</p>
 </form>
+
+<button
+        onclick="location.href='/delete_product/'+{{product_id}}" type="button">Удалить продукт
+</button>
+<button
+        onclick="location.href='{{ url_for('get_products')}}'" type="button">К списку продуктов
+</button>
+<button
+        onclick="location.href='{{ url_for('index')}}'" type="button">На главную
+</button>
 {% endblock %}
