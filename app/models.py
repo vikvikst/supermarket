@@ -110,7 +110,7 @@ class Measure(db.Model):
         return "<{}:{}:{}>".format(self.id,
                                    self.name,
                                     self.description)
-
+# prefork test
 class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer(), primary_key=True)
