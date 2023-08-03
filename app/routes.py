@@ -4,8 +4,8 @@ from flask import render_template, request, redirect, url_for, flash
 
 from app import app, db
 from app.forms import AddSupplierForm, AddClassProductForm, \
-    AddMeasureForm, AddProductForm
-from app.models import Supplier, ClassProduct,  Measure, Product
+    AddMeasureForm, AddProductForm, AddDeliviryForm
+from app.models import Supplier, ClassProduct, Measure, Product, Deliviry
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -357,9 +357,9 @@ def add_product():
             product.id_measure = int(form.id_measure.data)
             product.name = form.name.data
             product.description = form.description.data
+            product.price_buy = round(float(form.price_buy.data),2)
             product.price_sell = round(float(form.price_sell.data),2)
             product.id_measure = int(form.id_measure.data)
-            product.number = int(form.number.data)
             #
             try:
                 db.session.add(product)
@@ -395,8 +395,6 @@ def edit_product(id):
             product.price_buy = round(float(form.price_buy.data),2)
             product.price_sell = round(float(form.price_sell.data),2)
             product.id_measure = int(form.id_measure.data)
-            product.number = int(form.number.data)
-            #
             # todo: validate account
             try:
                 db.session.add(product)
@@ -415,7 +413,6 @@ def edit_product(id):
         form.price_buy.data = product.price_buy
         form.price_sell.data = product.price_sell
         form.description.data = product.description
-        form.number.data = product.number
         form.id_measure.data = product.id_measure
 
         return render_template(
@@ -435,3 +432,78 @@ def delete_product(id):
     except Exception as e:
         flash('Не удалось удалить запись')
     return redirect(url_for('get_products'))
+
+@app.route('/add_deliviry', methods=['GET', 'POST'])
+def add_deliviry():
+    form = AddDeliviryForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            deliviry = Deliviry()
+            deliviry.id_supplier = int(form.id_supplier.data)
+            deliviry.id_product = int(form.id_product.data)
+            deliviry.date = form.date.data
+            deliviry.number = int(form.number.data)
+            #
+            try:
+                db.session.add(deliviry)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось добавить запись')
+                return redirect(url_for('get_deliviries'))
+
+        return redirect(url_for('get_deliviries'))
+    else:
+        return render_template('add_deliviry.html', title='Добавление '
+                                                         'продукта',form=form)
+
+@app.route('/edit_deliviry/<int:id>', methods=['GET', 'POST'])
+def edit_deliviry(id):
+    deliviry = Deliviry.query.get(id)
+    if not deliviry:
+        flash('Запрошенной записи не существует')
+        return redirect(url_for('get_deliviries'))
+    form = AddProductForm(id_suppllier = deliviry.id_supplier,
+                                  id_product = deliviry.id_product)
+    if request.method == "POST":
+        if form.validate_on_submit():
+            deliviry.id_supplier = int(form.id_supplier.data)
+            deliviry.id_product = int(form.id_product.data)
+            deliviry.date = form.date.data
+            deliviry.number = int(form.number.data)
+            #
+            # todo: validate account
+            try:
+                db.session.add(deliviry)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось отредактировать запись')
+                return redirect(url_for('get_deliviries'))
+                print(e)
+            flash('Запись отредактирована')
+            return redirect(url_for('edit_deliviry',id = id))
+    # GET method
+    else:
+        # print('__________________________________________________')
+        # print(deliviry.get_supplier())
+        # print('__________________________________________________')
+        # print(deliviry.suppliers)
+        # return "uuuu"
+        deliviry_id = deliviry.id
+        #
+        # print(deliviry.date)
+        form.date.data = deliviry.date
+
+        form.number.data = deliviry.number
+
+        return render_template(
+            'edit_product.html', title='Редактирование товара',
+            form=form, deliviry_id = deliviry_id)
+
+@app.route('/get_deliviries')
+def get_deliviries():
+    deliviries = Deliviry.query.all()
+    # for d in deliviries:
+    #     print('__________________________________________________')
+    #     print(deliviries.get_supplier())
+    return render_template('get_deliviries.html', title='Поставки',
+                           deliviries=deliviries)

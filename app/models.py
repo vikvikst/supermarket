@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app import db
 
 
@@ -53,12 +55,11 @@ class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer(), primary_key=True)
     id_classp = db.Column(db.Integer, db.ForeignKey('class_product.id'))
+    id_measure = db.Column(db.Integer, db.ForeignKey('measure.id'))
     name = db.Column(db.String(32), nullable=False)
     price_buy = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     price_sell = db.Column(db.Numeric(precision=10, scale=2), nullable=False)
     description = db.Column(db.String(32), nullable=False)
-    number = db.Column(db.Integer, nullable=False)
-    id_measure = db.Column(db.Integer, db.ForeignKey('measure.id'))
 
     # classp = db.relationship(
     #     'ClassProduct', secondary=classproduct_product,
@@ -129,3 +130,24 @@ class Measure(db.Model):
         return "<{}:{}:{}>".format(self.id,
                                    self.name,
                                     self.description)
+
+class Deliviry(db.Model):
+    __tablename__ = 'deliviry'
+    id = db.Column(db.Integer(), primary_key=True)
+    # id_classp = db.Column(db.Integer, db.ForeignKey('supplier.id'))
+    id_supplier = db.Column(db.Integer, db.ForeignKey('supplier.id'))
+    id_product = db.Column(db.Integer, db.ForeignKey('product.id'))
+    date = db.Column(db.DateTime(), default=datetime.utcnow)
+    number = db.Column(db.Integer, nullable=False)
+    supplier = db.relationship('Supplier', backref='measures', lazy=True)
+    product = db.relationship('Product', backref='deliviry', lazy=True)
+
+    def get_supplier(self):
+        return Supplier.query.filter(Supplier.id == self.id).first()
+
+    def __repr__(self):
+        return "<{}:{}:{}:{}:{}>".format(self.id,
+                                            self.id_supplier,
+                                            self.id_product,
+                                            self.date,
+                                            self.number)

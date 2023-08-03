@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, TextAreaField, \
-    SelectField, FloatField, DecimalField
+    SelectField, FloatField, DecimalField, DateTimeLocalField, DateField
 from wtforms.validators import DataRequired, ValidationError, NumberRange, \
     Length
 
-from app.models import ClassProduct, Measure
+from app.models import ClassProduct, Measure, Product, Supplier
 
 
 def validate_isalpha(form, field):
@@ -61,11 +61,22 @@ class AddProductForm(FlaskForm):
     price_sell = DecimalField('Цена продажи',places=2)
     description = TextAreaField('Описание', validators=[DataRequired(), Length(
         max=32)])
+    id_measure = SelectField('Единица измерения',
+      choices=lambda: [(r.id, r.name) for r in Measure.query.all()],
+      coerce=int)
+
+    submit = SubmitField('Применить')
+
+class AddDeliviryForm(FlaskForm):
+    id_supplier = SelectField('Поставщик', choices=lambda: [(r.id, r.name)
+                              for r in Supplier.query.all()], coerce=int)
+    id_product = SelectField('Выбор продукта', choices=lambda: [(r.id, r.name)
+                                for r in Product.query.all()], coerce=int)
+    # date = DateTimeLocalField('Дата/время',
+    date = DateField('Дата/время',
+                              format='%Y-%m-%d',
+                              validators=[DataRequired()])
     number = IntegerField('Количество', validators=[DataRequired(), NumberRange(
         min=0, message='Значение не может быть отрицательным')])
-    id_measure = SelectField('Единица измерения',
-                          choices=lambda: [(r.id, r.name)
-                                           for r in Measure.query.all()],
-                          coerce=int)
 
     submit = SubmitField('Применить')

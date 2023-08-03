@@ -11,6 +11,7 @@
 <table id="maintable" class="tables" border="1" cellpadding="5" cellspacing="5">
     <thead>
     <tr>
+        <td>Код</td>
         <td>Название</td>
         <td>Описание</td>
     </tr>
@@ -18,6 +19,7 @@
     <tbody>
     {% for values in products %}
     <tr>
+        <td>{{values.id}}</td>
         <td><a href="{{ url_for('edit_product',id = values.id)}}" title="Редактировать" target="_blank">{{values.name}}</a></td>
         <td>{{values.description}}</td>
     </tr>
@@ -30,7 +32,7 @@
 <H1> Выборка пуста</H1>
 {% endif %}
 <button
-        onclick="location.href='/add_measure'" type="button">Добавить
+        onclick="location.href='/add_product'" type="button">Добавить
 </button>
 
 
