@@ -130,7 +130,6 @@ class Measure(db.Model):
         return "<{}:{}:{}>".format(self.id,
                                    self.name,
                                     self.description)
-
 class Deliviry(db.Model):
     __tablename__ = 'deliviry'
     id = db.Column(db.Integer(), primary_key=True)
@@ -142,12 +141,23 @@ class Deliviry(db.Model):
     supplier = db.relationship('Supplier', backref='measures', lazy=True)
     product = db.relationship('Product', backref='deliviry', lazy=True)
 
-    def get_supplier(self):
-        return Supplier.query.filter(Supplier.id == self.id).first()
+    def __repr__(self):
+        return "<{}:{}:{}:{}:{}>".format(self.id,
+                                         self.id_supplier,
+                                         self.id_product,
+                                         self.date,
+                                         self.number)
+
+class Sale(db.Model):
+    __tablename__ = 'sale'
+    id = db.Column(db.Integer(), primary_key=True)
+    id_product = db.Column(db.Integer, db.ForeignKey('product.id'))
+    date = db.Column(db.DateTime(), default=datetime.utcnow)
+    number = db.Column(db.Integer, nullable=False)
+    product = db.relationship('Product', backref='sales', lazy=True)
 
     def __repr__(self):
         return "<{}:{}:{}:{}:{}>".format(self.id,
-                                            self.id_supplier,
-                                            self.id_product,
-                                            self.date,
-                                            self.number)
+                                         self.id_product,
+                                         self.date,
+                                         self.number)
