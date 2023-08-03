@@ -519,3 +519,9 @@ def add_sale():
     else:
         return render_template('add_sale.html', title='Продажа '
                                                           'продукта',form=form)
+
+@app.route('/get_sales')
+def get_sales():
+    sales = Sale.query.all()
+    return render_template('get_sales.html', title='Поставки',
+                           sales=sales)
