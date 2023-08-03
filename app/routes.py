@@ -4,8 +4,8 @@ from flask import render_template, request, redirect, url_for, flash
 
 from app import app, db
 from app.forms import AddSupplierForm, AddClassProductForm, \
-    AddMeasureForm, AddProductForm, AddDeliviryForm
-from app.models import Supplier, ClassProduct, Measure, Product, Deliviry
+    AddMeasureForm, AddProductForm, AddDeliviryForm, AddSaleForm
+from app.models import Supplier, ClassProduct, Measure, Product, Deliviry, Sale
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -499,3 +499,23 @@ def get_deliviries():
     #     print(deliviries.get_supplier())
     return render_template('get_deliviries.html', title='Поставки',
                            deliviries=deliviries)
+
+@app.route('/add_sale', methods=['GET', 'POST'])
+def add_sale():
+    form = AddSaleForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            sale = Sale()
+            sale.id_product = int(form.id_product.data)
+            sale.number = int(form.number.data)
+            try:
+                db.session.add(sale)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось добавить запись')
+                return redirect(url_for('get_deliviries'))
+
+        return redirect(url_for('get_deliviries'))
+    else:
+        return render_template('add_sale.html', title='Продажа '
+                                                          'продукта',form=form)
