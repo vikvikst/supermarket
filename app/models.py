@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from sqlalchemy import func
+
 from app import db
 
 
@@ -147,6 +149,13 @@ class Deliviry(db.Model):
                                          self.id_product,
                                          self.date,
                                          self.number)
+    @staticmethod
+    def get_amount_products(id_product):
+
+        amount = Deliviry.query.with_entities(func.sum(Deliviry.number).label(
+            'total')).filter(Deliviry.id_product == id_product).first().total
+        return amount
+
 
 class Sale(db.Model):
     __tablename__ = 'sale'
@@ -161,3 +170,21 @@ class Sale(db.Model):
                                          self.id_product,
                                          self.date,
                                          self.number)
+
+    @staticmethod
+    def get_amount_products(id_product):
+
+        amount = Sale.query.with_entities(func.sum(Sale.number).label(
+            'total')).filter(Sale.id_product == id_product).first().total
+        # sum = Sale.query.with_entities(func.sum(Sale.number).label(
+        #     'total')).first().total
+        # моеsum = Sale.query(func.sum(Sale.number)).filter(Sale.id_product ==
+        # self.id_product).one()
+
+        # amount = Sale.query.with_entities(func.sum(Sale.number).filter(
+        #     Sale.id_product == self.id_product).label(
+        #     'total')).first().total
+
+        # print(sum)
+        return amount
+        # pay = db_session.query(func.sum(Orders.pay)).filter(Orders.shifts_id == shift_id).one()

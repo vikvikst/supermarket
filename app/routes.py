@@ -508,6 +508,21 @@ def add_sale():
             sale = Sale()
             sale.id_product = int(form.id_product.data)
             sale.number = int(form.number.data)
+            amount_sale = Sale.get_amount_products(sale.id_product)
+            amount_deliviry = Deliviry.get_amount_products(sale.id_product)
+            difference = amount_deliviry - amount_sale
+            if sale.number > difference:
+                flash('Количество выбранного товара превышает наличие. Вы '
+                      'можете ввести не более {}'.format(difference))
+                # EditSaleForm(id_suppllier = sale.product)
+                # form1 = AddSaleForm(id_product = sale.id_product, number = sale.number)
+                return render_template('add_sale.html', title='Продажа '
+                                                  'продукта',form=form)
+            # print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            # print(sale.get_amount_products())
+            # print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            # print(Deliviry.get_amount_products(sale.id_product))
+            # return "yyy"
             try:
                 db.session.add(sale)
                 db.session.commit()
