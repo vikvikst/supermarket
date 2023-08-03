@@ -19,9 +19,9 @@
     <tbody>
     {% for values in sales %}
     <tr>
-        <td><a href="{{ url_for('edit_product',id = values.id)}}" title="Редактировать" target="_blank">{{values.product.name}}</a></td>
+        <td><a href="{{ url_for('edit_sale',id = values.id)}}" title="Редактировать продажу" target="_blank">{{values.product.name}}</a></td>
         <td>{{values.number}}</td>
-        <td><a href="{{ url_for('edit_deliviry',id = values.id)}}" title="Редактировать продажу" target="_blank">{{values.date.strftime('%Y-%m-%d')}}</a></td>
+        <td>{{values.date.strftime('%Y-%m-%d')}}</td>
     </tr>
     {% endfor %}
     </tbody>
@@ -31,8 +31,10 @@
 {% else %}
 <H1> Выборка пуста</H1>
 {% endif %}
+</br>
+</br>
 <button
-        onclick="location.href='/add_deliviry'" type="button">Добавить
+        onclick="location.href='/add_sale'" type="button">Новая продажа
 </button>
 
 

@@ -4,7 +4,7 @@ from flask import render_template, request, redirect, url_for, flash
 
 from app import app, db
 from app.forms import AddSupplierForm, AddClassProductForm, \
-    AddMeasureForm, AddProductForm, AddDeliviryForm, AddSaleForm
+    AddMeasureForm, AddProductForm, AddDeliviryForm, AddSaleForm, EditSaleForm
 from app.models import Supplier, ClassProduct, Measure, Product, Deliviry, Sale
 
 
@@ -515,10 +515,44 @@ def add_sale():
                 flash('Не удалось добавить запись')
                 return redirect(url_for('get_deliviries'))
 
-        return redirect(url_for('get_deliviries'))
+        return redirect(url_for('get_sales'))
     else:
         return render_template('add_sale.html', title='Продажа '
                                                           'продукта',form=form)
+
+@app.route('/edit_sale/<int:id>', methods=['GET', 'POST'])
+def edit_sale(id):
+    sale = Sale.query.get(id)
+    if not sale:
+        flash('Запрошенной записи не существует')
+        return redirect(url_for('get_sales'))
+    form = EditSaleForm(id_suppllier = sale.product)
+    if request.method == "POST":
+        if form.validate_on_submit():
+            sale.id_product = int(form.id_product.data)
+            sale.number = int(form.number.data)
+            sale.date = form.date.data
+
+            # todo: validate account
+            try:
+                db.session.add(sale)
+                db.session.commit()
+            except Exception as e:
+                flash('Не удалось отредактировать запись')
+                return redirect(url_for('get_sales'))
+                print(e)
+            flash('Запись отредактирована')
+            return redirect(url_for('edit_sale',id = id))
+    # GET method
+    else:
+        sale_id = sale.id
+        form.date.data = sale.date
+        form.number.data = sale.number
+        # form.id_supplier.data = sale.id_supplier
+        return render_template(
+            'edit_sale.html', title='Редактирование продажи',
+            form=form, sale_id = sale_id)
+
 
 @app.route('/get_sales')
 def get_sales():
