@@ -73,10 +73,10 @@ class AddDeliviryForm(FlaskForm):
     id_product = SelectField('Выбор продукта', choices=lambda: [(r.id, r.name)
                                 for r in Product.query.all()], coerce=int)
     # date = DateTimeLocalField('Дата/время',
-    date = DateField('Дата/время',
+    date = DateField('Дата',
                               format='%Y-%m-%d',
                               validators=[DataRequired()])
     number = IntegerField('Количество', validators=[DataRequired(), NumberRange(
-        min=0, message='Значение не может быть отрицательным')])
+        min=1, message='Значение не может быть отрицательным')])
 
     submit = SubmitField('Применить')

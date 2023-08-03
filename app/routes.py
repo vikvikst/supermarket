@@ -462,7 +462,7 @@ def edit_deliviry(id):
     if not deliviry:
         flash('Запрошенной записи не существует')
         return redirect(url_for('get_deliviries'))
-    form = AddProductForm(id_suppllier = deliviry.id_supplier,
+    form = AddDeliviryForm(id_suppllier = deliviry.id_supplier,
                                   id_product = deliviry.id_product)
     if request.method == "POST":
         if form.validate_on_submit():
@@ -483,20 +483,12 @@ def edit_deliviry(id):
             return redirect(url_for('edit_deliviry',id = id))
     # GET method
     else:
-        # print('__________________________________________________')
-        # print(deliviry.get_supplier())
-        # print('__________________________________________________')
-        # print(deliviry.suppliers)
-        # return "uuuu"
         deliviry_id = deliviry.id
-        #
-        # print(deliviry.date)
         form.date.data = deliviry.date
-
         form.number.data = deliviry.number
-
+        form.id_supplier.data = deliviry.id_supplier
         return render_template(
-            'edit_product.html', title='Редактирование товара',
+            'add_deliviry.html', title='Редактирование поставки',
             form=form, deliviry_id = deliviry_id)
 
 @app.route('/get_deliviries')
